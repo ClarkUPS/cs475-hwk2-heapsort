@@ -6,6 +6,7 @@
  */
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
 #include "employee.h"
 #include "heap.h"
 
@@ -18,6 +19,11 @@
  */
 void heapSort(struct Employee *A, int n)
 {
+	int i = n;
+	while(i > 0){
+		swap(&A[0],&A[i-1]);
+		i--;
+	}
 	//TODO - BuildHeap on the list
 	
 	//TODO - while n > 0:
@@ -38,7 +44,12 @@ void heapSort(struct Employee *A, int n)
  */
 void buildHeap(struct Employee *A, int n)
 {
-	//TODO - heapify() every element from A[n/2] to A[0]
+	double i;
+	for(i = floor(n/2); i >= 0; i--){
+		heapify(A,i,n);
+	}
+	
+	//TODO - heapify() every element from A[n/2] to A[0] until n-1
 }
 
 
@@ -50,17 +61,25 @@ void buildHeap(struct Employee *A, int n)
  * @param	i	Index of current element to heapify
  * @param	n	Size of the list
  */
+
 void heapify(struct Employee *A, int i, int n)
 {
-	//TODO - get index of left child of element i
-	//TODO - get index of right child of element i
+	int indexLeft = (2 * (i + 1)-1);
+	int indexRight = (2 * (i+1));
 
-	//TODO - determine which child has a smaller salary. We'll call the index of this
-	//		element: "smaller"
+	int smallest = i;
+	if(indexLeft < n && A[indexLeft].salary <= A[smallest].salary){
+		smallest = indexLeft;
+	}
 
-	//TODO - recursively check if the salary at A[i] > the salary at A[smaller]. If it is, swap the two.
-	//			Then recursively heapify A[smaller].
-	//TODO - Continue recursion as long as i is within range AND either right_child and left_child are still within range.
+	if(indexRight < n && A[indexRight].salary <= A[smallest].salary){
+		smallest = indexRight;
+	}
+
+	if(i != smallest){
+		swap(&A[i],&A[smallest]);
+		heapify(A,smallest,n);		
+	}
 }
 
 /**
@@ -71,7 +90,8 @@ void heapify(struct Employee *A, int i, int n)
  */
 struct Employee *getMinPaidEmployee(struct Employee *A, int n)
 {
-	//TODO
+	struct Employee *minPayedEmp = &A[0];
+	return minPayedEmp;
 }
 
 
@@ -82,7 +102,9 @@ struct Employee *getMinPaidEmployee(struct Employee *A, int n)
  */
 void swap(struct Employee *e1, struct Employee *e2)
 {
-	//TODO 
+	struct Employee et = *e2;
+	*e2 = *e1;
+	*e1 = et;
 }
 
 /**
@@ -92,5 +114,12 @@ void swap(struct Employee *e1, struct Employee *e2)
  */
 void printList(struct Employee *A, int n)
 {
-	//TODO
+	int i;
+	for(i = 0; i < n; i++){
+		printf("[id=%s", A->name);
+		printf(" sal=%d", A->salary);
+		printf("]");
+		A++;
+	}
+	printf("\n");
 }
